@@ -3,18 +3,19 @@ package br.com.apivendas.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Data
-public class Itnes {
+public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
     private String urlItem;
     private String UrlImagem;
-    private Boolean preco;
-    @ManyToOne
-    private Pedido pedido;
+    private String preco;
+
+
 
 }

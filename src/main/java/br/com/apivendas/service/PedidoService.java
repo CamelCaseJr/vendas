@@ -20,4 +20,8 @@ public class PedidoService {
         return pedidoRepository.findAll();
 
     }
+
+    public Object save(Pedido pedido) {
+       return pedidoRepository.save(pedido);
+    }
 }

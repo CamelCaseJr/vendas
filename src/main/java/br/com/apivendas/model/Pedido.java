@@ -15,19 +15,17 @@ public class Pedido {
     private Long id;
     private String numero;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id")
+    @ManyToOne()
     private Usuario usuario;
     private LocalDate dataDoPedido;
     private String precoPedido;
 
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<Itnes> itnes = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Item> itnes = new ArrayList<>();
 
-    public void setItens(Itnes item){
+    public void setItens(Item item){
         System.out.println("adicionando item");
          this.itnes.add(item);
-         item.setPedido(this);
     }
 
 

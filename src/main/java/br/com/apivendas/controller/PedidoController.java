@@ -32,11 +32,13 @@ public class PedidoController {
             return ResponseEntity.status(HttpStatus.OK).body(pedidoService.findyAll());
     }
 
-    @PostMapping("/adicionar/{id}")
-    public ResponseEntity<Object> savePedido(@RequestBody PedidoDto pedidoDto,@PathVariable(value = "id") Long idItem){
-        var pedido = new Pedido();
+    @PostMapping("/adicionar")
+    public ResponseEntity<Object> savePedido(@RequestBody PedidoDto pedidoDto,@RequestParam("idItem") Long idItem){
+
         Optional<Item> itemOptional =  itensService.findById(idItem);
+
         if (itemOptional.isPresent()){
+            var pedido = new Pedido();
             pedido.setItens(itemOptional.get());
 
             BeanUtils.copyProperties(pedidoDto, pedido);

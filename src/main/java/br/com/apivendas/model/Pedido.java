@@ -14,22 +14,16 @@ public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID numero;
 
-    @ManyToOne()
-    private Usuario usuario;
+    @OneToOne
+    private CarrinhoDeCompras carrinhoDeCompras;
+
     private LocalDate dataDoPedido;
     private String precoPedido;
-    private int quantidade;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Item> itnes = new ArrayList<>();
-
-    public void setItens(Item item){
-        System.out.println("adicionando item");
-         this.itnes.add(item);
+    public Pedido() {
+        UUID uuid = UUID.randomUUID();
+        this.numero = uuid;
     }
-
-
 }

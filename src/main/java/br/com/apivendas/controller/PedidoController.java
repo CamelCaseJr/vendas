@@ -1,9 +1,9 @@
 package br.com.apivendas.controller;
 
 import br.com.apivendas.dto.PedidoDto;
-import br.com.apivendas.model.Item;
+import br.com.apivendas.model.CarrinhoDeCompras;
 import br.com.apivendas.model.Pedido;
-import br.com.apivendas.service.ItensService;
+import br.com.apivendas.service.CarrinhoService;
 import br.com.apivendas.service.PedidoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -20,29 +20,40 @@ import java.util.Optional;
 public class PedidoController {
 
     private PedidoService pedidoService;
-    private ItensService itensService;
+    private final CarrinhoService carrinhoService;
 
 
-    public PedidoController(PedidoService pedidoService, ItensService itensService) {
+    public PedidoController(PedidoService pedidoService, CarrinhoService carrinhoService) {
         this.pedidoService = pedidoService;
-        this.itensService = itensService;
+
+        this.carrinhoService = carrinhoService;
     }
     @GetMapping
     public ResponseEntity<List<Pedido>> getPedidos(){
             return ResponseEntity.status(HttpStatus.OK).body(pedidoService.findyAll());
     }
 
-    @PostMapping("/adicionar")
-    public ResponseEntity<Object> savePedido(@RequestBody PedidoDto pedidoDto,@RequestParam("idItem") Long idItem){
+    @PostMapping("/salvar")
+    public ResponseEntity<Object> savePedido(@RequestBody PedidoDto pedidoDto, @RequestParam("idCarrinho") Long idCarrinho){
 
-        Optional<Item> itemOptional =  itensService.findById(idItem);
+        Optional<CarrinhoDeCompras> carrinhoOptional = carrinhoService.findById(idCarrinho);
 
-        if (itemOptional.isPresent()){
+        if (carrinhoOptional.isPresent()){
+            System.out.println("criar pedido");
+
             var pedido = new Pedido();
-            pedido.setItens(itemOptional.get());
+            CarrinhoDeCompras carrinhoDeCompras = carrinhoOptional.get();
+            pedidoDto.setPrecoPedido(String.valueOf(carrinhoDeCompras.getTotal()));
+            System.out.println("salvar data");
+            pedidoDto.setDataDoPedido(LocalDate.now(ZoneId.of("UTC")));
 
             BeanUtils.copyProperties(pedidoDto, pedido);
-            pedidoDto.setDataDoPedido(LocalDate.now(ZoneId.of("UTC")));
+
+            System.out.println("adicionar carrinho");
+            pedido.setCarrinhoDeCompras(carrinhoOptional.get());
+
+
+            System.out.println("salvar pedido");
             return ResponseEntity.status(HttpStatus.OK).body(pedidoService.save(pedido));
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("não foi passado o produto");

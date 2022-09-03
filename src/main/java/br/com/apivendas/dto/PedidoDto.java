@@ -8,7 +8,6 @@ import java.time.LocalDate;
 public class PedidoDto {
     private String precoPedido;
     private LocalDate dataDoPedido;
-    private int quantidade;
 
 }
 

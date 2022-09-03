@@ -8,7 +8,7 @@ public class ItemDto {
     private String urlItem;
     private String urlImagem;
     private String preco;
-    private String quantidade;
+
 
 
 }

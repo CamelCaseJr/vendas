@@ -10,10 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
+import static org.springframework.http.HttpStatus.*;
 
 @RestController()
 @RequestMapping("/pedidos")
@@ -32,6 +34,27 @@ public class PedidoController {
     public ResponseEntity<List<Pedido>> getPedidos(){
             return ResponseEntity.status(HttpStatus.OK).body(pedidoService.findyAll());
     }
+    @GetMapping("/nomeUsuario/{nome}")
+    public ResponseEntity<List<Object>> getPedidosPorNome(@PathVariable String nome) {
+        Optional<List<Object>> optionalPedido = pedidoService.findyByNome(nome);
+        if (!optionalPedido.get().isEmpty()){
+            return ResponseEntity.status(HttpStatus.OK).body(optionalPedido.get());
+
+        }
+        return new ResponseEntity<>(NOT_FOUND);
+    }
+    @GetMapping("/numero/{numero}")
+    public ResponseEntity<List<Object>> getPedidosPorNome(@PathVariable UUID numero) {
+        Optional<List<Object>> optionalPedido = pedidoService.findyByNumero(numero);
+        if (!optionalPedido.get().isEmpty()){
+            return ResponseEntity.status(HttpStatus.OK).body(optionalPedido.get());
+
+        }
+        return new ResponseEntity<>(NOT_FOUND);
+    }
+
+
+
 
     @PostMapping("/salvar")
     public ResponseEntity<Object> savePedido(@RequestBody PedidoDto pedidoDto, @RequestParam("idCarrinho") Long idCarrinho){
@@ -39,24 +62,25 @@ public class PedidoController {
         Optional<CarrinhoDeCompras> carrinhoOptional = carrinhoService.findById(idCarrinho);
 
         if (carrinhoOptional.isPresent()){
-            System.out.println("criar pedido");
-
             var pedido = new Pedido();
-            CarrinhoDeCompras carrinhoDeCompras = carrinhoOptional.get();
-            pedidoDto.setPrecoPedido(String.valueOf(carrinhoDeCompras.getTotal()));
-            System.out.println("salvar data");
-            pedidoDto.setDataDoPedido(LocalDate.now(ZoneId.of("UTC")));
-
+            pedidoService.criarPedido(carrinhoOptional, pedidoDto, pedido);
             BeanUtils.copyProperties(pedidoDto, pedido);
-
-            System.out.println("adicionar carrinho");
-            pedido.setCarrinhoDeCompras(carrinhoOptional.get());
-
 
             System.out.println("salvar pedido");
             return ResponseEntity.status(HttpStatus.OK).body(pedidoService.save(pedido));
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("não foi passado o produto");
+    }
+
+    @DeleteMapping("/deletar/{id}")
+    public ResponseEntity<Object> deletarPedido(@PathVariable("id") Long id){
+        Optional<Pedido> pedido = pedidoService.findById(id);
+        if (pedido.isPresent()){
+            pedidoService.deletar(id);
+            return ResponseEntity.status(OK).build();
+        }
+        return ResponseEntity.notFound().build();
+
     }
 
 }

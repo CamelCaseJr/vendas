@@ -1,18 +1,18 @@
 package br.com.apivendas.controller;
 
+import br.com.apivendas.dto.ItemDto;
 import br.com.apivendas.model.CarrinhoDeCompras;
 import br.com.apivendas.model.Item;
 import br.com.apivendas.service.CarrinhoService;
 import br.com.apivendas.service.ItensService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestController
 @RequestMapping("/carrinho")
@@ -24,8 +24,19 @@ public class CarrinhoController {
         this.carrinhoService = carrinhoService;
         this.itensService = itensService;
     }
+    @GetMapping("/buscarTodos")
     public  ResponseEntity<List<CarrinhoDeCompras>> getCarrinho(){
         return ResponseEntity.status(HttpStatus.OK).body(carrinhoService.buscarTodos());
+    }
+
+    @GetMapping("/nomeUsuario/{nome}")
+    public ResponseEntity<List<Object>> getPedidosPorNome(@PathVariable String nome) {
+        Optional<List<Object>> optionalCarrinho = carrinhoService.findyByNome(nome);
+        if (!optionalCarrinho.get().isEmpty()){
+            return ResponseEntity.status(HttpStatus.OK).body(optionalCarrinho.get());
+
+        }
+        return new ResponseEntity<>(NOT_FOUND);
     }
 
     @PostMapping("/salvar")
@@ -39,6 +50,33 @@ public class CarrinhoController {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(carrinhoService.save(itemOptional.get(),quantidade));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("erro");
+    }
+    public ResponseEntity<Object> atualizarCarrinho(
+            @RequestParam("idItem") Long idItem,
+            @RequestParam("idcarrinho") Long idCarrinho,
+            @RequestParam("quantidade") int quantidade){
+
+        Optional<CarrinhoDeCompras> optionalCarrinhoDeCompras = carrinhoService.findById(idCarrinho);
+
+        return optionalCarrinhoDeCompras.map(carrinhoDeCompras -> ResponseEntity
+                .status(HttpStatus.OK)
+                .body(carrinhoService.atualizar(idItem, carrinhoDeCompras, quantidade)))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.OK).body("erro"));
+
+    }
+
+
+
+    @DeleteMapping("/deletarItemCarrinho/{idItem}")
+    public ResponseEntity<Object> deletarItensCarrinho(@RequestParam("idItem") Long idItem){
+        Optional<Item> itemOptional = itensService.findById(idItem);
+
+        if (itemOptional.isPresent()){
+            carrinhoService.delete(idItem);
+            return ResponseEntity
+                    .status(HttpStatus.OK).build();
         }
         return ResponseEntity.status(HttpStatus.OK).body("erro");
     }

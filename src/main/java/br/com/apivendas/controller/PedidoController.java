@@ -30,7 +30,7 @@ public class PedidoController {
 
         this.carrinhoService = carrinhoService;
     }
-    @GetMapping
+    @GetMapping("/buscarTodos")
     public ResponseEntity<List<Pedido>> getPedidos(){
             return ResponseEntity.status(HttpStatus.OK).body(pedidoService.findyAll());
     }

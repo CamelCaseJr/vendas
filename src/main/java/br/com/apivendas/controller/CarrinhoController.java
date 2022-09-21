@@ -1,8 +1,7 @@
 package br.com.apivendas.controller;
 
-import br.com.apivendas.dto.ItemDto;
-import br.com.apivendas.model.CarrinhoDeCompras;
-import br.com.apivendas.model.Item;
+import br.com.apivendas.model.entity.CarrinhoDeCompras;
+import br.com.apivendas.model.entity.Item;
 import br.com.apivendas.service.CarrinhoService;
 import br.com.apivendas.service.ItensService;
 import org.springframework.http.HttpStatus;
@@ -51,8 +50,9 @@ public class CarrinhoController {
                     .status(HttpStatus.OK)
                     .body(carrinhoService.save(itemOptional.get(),quantidade));
         }
-        return ResponseEntity.status(HttpStatus.OK).body("erro");
+        return ResponseEntity.status(NOT_FOUND).body("erro");
     }
+    @PostMapping("/atualizar")
     public ResponseEntity<Object> atualizarCarrinho(
             @RequestParam("idItem") Long idItem,
             @RequestParam("idcarrinho") Long idCarrinho,
@@ -62,7 +62,7 @@ public class CarrinhoController {
 
         return optionalCarrinhoDeCompras.map(carrinhoDeCompras -> ResponseEntity
                 .status(HttpStatus.OK)
-                .body(carrinhoService.atualizar(idItem, carrinhoDeCompras, quantidade)))
+                .body(carrinhoService.atualizar(idItem, optionalCarrinhoDeCompras.get(), quantidade)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.OK).body("erro"));
 
     }
@@ -70,14 +70,17 @@ public class CarrinhoController {
 
 
     @DeleteMapping("/deletarItemCarrinho/{idItem}")
-    public ResponseEntity<Object> deletarItensCarrinho(@RequestParam("idItem") Long idItem){
-        Optional<Item> itemOptional = itensService.findById(idItem);
+    public ResponseEntity<Object> deletarItensCarrinho(@RequestParam("idItem") Long idItem,
+                                                       @RequestParam("idcarrinho") Long idCarrinho){
+        Optional<CarrinhoDeCompras> optionalCarrinhoDeCompras = carrinhoService.findById(idCarrinho);
 
-        if (itemOptional.isPresent()){
-            carrinhoService.delete(idItem);
+        if(optionalCarrinhoDeCompras.isPresent()){
             return ResponseEntity
-                    .status(HttpStatus.OK).build();
+                    .status(HttpStatus.OK)
+                    .body(carrinhoService.delete(optionalCarrinhoDeCompras.get(), idItem));
         }
-        return ResponseEntity.status(HttpStatus.OK).body("erro");
+
+        return ResponseEntity.notFound().build();
+
     }
 }

@@ -1,10 +1,9 @@
 package br.com.apivendas.service;
 
 import br.com.apivendas.dto.PedidoDto;
-import br.com.apivendas.model.CarrinhoDeCompras;
-import br.com.apivendas.model.Pedido;
+import br.com.apivendas.model.entity.CarrinhoDeCompras;
+import br.com.apivendas.model.entity.Pedido;
 import br.com.apivendas.repository.PedidoRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

@@ -1,15 +1,13 @@
 package br.com.apivendas.service;
 
-import br.com.apivendas.model.CarrinhoDeCompras;
-import br.com.apivendas.model.Item;
+import br.com.apivendas.model.entity.CarrinhoDeCompras;
+import br.com.apivendas.model.entity.Item;
 import br.com.apivendas.repository.CarrinhoRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CarrinhoService {
@@ -38,9 +36,15 @@ public class CarrinhoService {
         return carrinhoRepository.findByUsuarioNome(nome);
     }
 
-    @Transactional
-    public void delete(Long idItem) {
-        carrinhoRepository.deleteById(idItem);
+
+    public Object delete(CarrinhoDeCompras carrinhoDeCompras, Long idItem) {
+        Item i = carrinhoDeCompras.getItens().stream()
+                .filter(item -> item.getId().equals(idItem))
+                .findAny().get();
+
+       carrinhoDeCompras.removerItens(i);
+       return carrinhoRepository.save(carrinhoDeCompras);
+
     }
 
     public Object atualizar(Long iditem, CarrinhoDeCompras carrinhoDeCompras, int quantidade) {

@@ -1,6 +1,6 @@
 package br.com.apivendas.service;
 
-import br.com.apivendas.model.Item;
+import br.com.apivendas.model.entity.Item;
 import br.com.apivendas.repository.ItemRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

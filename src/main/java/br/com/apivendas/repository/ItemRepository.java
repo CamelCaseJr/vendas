@@ -1,6 +1,6 @@
 package br.com.apivendas.repository;
 
-import br.com.apivendas.model.Item;
+import br.com.apivendas.model.entity.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

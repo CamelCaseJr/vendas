@@ -1,11 +1,10 @@
-package br.com.apivendas.model;
+package br.com.apivendas.model.entity;
 
+import br.com.apivendas.model.entity.CarrinhoDeCompras;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity

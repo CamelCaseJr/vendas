@@ -1,4 +1,4 @@
-package br.com.apivendas.model;
+package br.com.apivendas.model.entity;
 
 import lombok.Data;
 

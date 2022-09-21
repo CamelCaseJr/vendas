@@ -1,7 +1,7 @@
 package br.com.apivendas.controller;
 
 import br.com.apivendas.dto.ItemDto;
-import br.com.apivendas.model.Item;
+import br.com.apivendas.model.entity.Item;
 import br.com.apivendas.service.ItensService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;

@@ -1,11 +1,8 @@
-package br.com.apivendas.model;
+package br.com.apivendas.model.entity;
 
-import br.com.apivendas.dto.ItemDto;
 import lombok.Data;
-import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +13,9 @@ public class CarrinhoDeCompras {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
     private Double total;
     @OneToMany(fetch = FetchType.LAZY)
@@ -26,6 +25,10 @@ public class CarrinhoDeCompras {
         item.setQuantidade(quantidade);
         total = Double.parseDouble(item.getPreco()) * quantidade;
         itens.add(item);
+    }
+
+    public Boolean removerItens(Item item){
+        return itens.remove(item);
     }
 
 }

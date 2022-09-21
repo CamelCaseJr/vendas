@@ -1,8 +1,8 @@
 package br.com.apivendas.controller;
 
 import br.com.apivendas.dto.PedidoDto;
-import br.com.apivendas.model.CarrinhoDeCompras;
-import br.com.apivendas.model.Pedido;
+import br.com.apivendas.model.entity.CarrinhoDeCompras;
+import br.com.apivendas.model.entity.Pedido;
 import br.com.apivendas.service.CarrinhoService;
 import br.com.apivendas.service.PedidoService;
 import org.springframework.beans.BeanUtils;
@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

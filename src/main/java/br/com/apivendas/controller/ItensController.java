@@ -1,13 +1,16 @@
 package br.com.apivendas.controller;
 
 import br.com.apivendas.dto.ItemDto;
+import br.com.apivendas.form.ItemForm;
 import br.com.apivendas.model.entity.Item;
 import br.com.apivendas.service.ItensService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,16 +23,18 @@ public class ItensController {
         this.itensService = itensService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Item>> getItens(){
-        return ResponseEntity.status(HttpStatus.OK).body(itensService.findAll());
+    @GetMapping("/buscarTodos")
+    public ResponseEntity<List<ItemDto>> getItens(){
+        List<Item> itens = itensService.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body( ItemDto.converterItemDto(itens));
     }
 
 
     @PostMapping("/salvar")
-    public ResponseEntity<Item> salvarItem(@RequestBody ItemDto itemDto){
+    @Transactional
+    public ResponseEntity<Item> salvarItem(@RequestBody @Valid ItemForm itemForm){
         var item = new Item();
-        BeanUtils.copyProperties(itemDto, item);
+        BeanUtils.copyProperties(itemForm, item);
         return ResponseEntity.status(HttpStatus.OK).body(itensService.salvar(item));
     }
 }

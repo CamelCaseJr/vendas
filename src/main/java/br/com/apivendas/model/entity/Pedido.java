@@ -21,8 +21,4 @@ public class Pedido {
     private LocalDate dataDoPedido;
     private String precoPedido;
 
-    public  void setNumeroPedido(){
-        UUID uuid = UUID.randomUUID();
-        numero = uuid;
-    }
 }

@@ -21,11 +21,11 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
-    public Optional<List<Object>> findyByNome(String nome) {
+    public Optional<List<Usuario>> findyByNome(String nome) {
         return usuarioRepository.findByNome(nome);
     }
 
-    public Object salvar(Usuario usuario) {
+    public Usuario salvar(Usuario usuario) {
         return usuarioRepository.save(usuario);
     }
 

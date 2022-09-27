@@ -6,6 +6,7 @@ import br.com.apivendas.service.CarrinhoService;
 import br.com.apivendas.service.ItensService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,6 +40,7 @@ public class CarrinhoController {
     }
 
     @PostMapping("/salvar")
+    @Transactional
     // vai receber um item e adicionar na lista
     public ResponseEntity<Object> salvarCarrinhoDeCompras(@RequestParam("idItem") Long idItem,
                                                           @RequestParam("quantidade") int quantidade){
@@ -53,6 +55,7 @@ public class CarrinhoController {
         return ResponseEntity.status(NOT_FOUND).body("erro");
     }
     @PostMapping("/atualizar")
+    @Transactional
     public ResponseEntity<Object> atualizarCarrinho(
             @RequestParam("idItem") Long idItem,
             @RequestParam("idcarrinho") Long idCarrinho,
@@ -70,6 +73,7 @@ public class CarrinhoController {
 
 
     @DeleteMapping("/deletarItemCarrinho/{idItem}")
+    @Transactional
     public ResponseEntity<Object> deletarItensCarrinho(@RequestParam("idItem") Long idItem,
                                                        @RequestParam("idcarrinho") Long idCarrinho){
         Optional<CarrinhoDeCompras> optionalCarrinhoDeCompras = carrinhoService.findById(idCarrinho);

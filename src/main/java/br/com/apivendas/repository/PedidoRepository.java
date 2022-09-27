@@ -11,8 +11,8 @@ import java.util.UUID;
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
-    Optional<List<Object>> findByCarrinhoDeComprasUsuarioNome(String nome);
+    Optional<List<Pedido>> findByCarrinhoDeComprasUsuarioNome(String nome);
 
-    Optional<List<Object>> findByNumero(UUID numero);
+    Optional<List<Pedido>> findByNumero(UUID numero);
 
 }

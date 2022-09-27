@@ -1,9 +1,11 @@
 package br.com.apivendas.service;
 
 import br.com.apivendas.dto.PedidoDto;
+import br.com.apivendas.form.PedidoForm;
 import br.com.apivendas.model.entity.CarrinhoDeCompras;
 import br.com.apivendas.model.entity.Pedido;
 import br.com.apivendas.repository.PedidoRepository;
+import ch.qos.logback.core.joran.util.beans.BeanUtil;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -28,25 +30,11 @@ public class PedidoService {
        return pedidoRepository.save(pedido);
     }
 
-    public void criarPedido(Optional<CarrinhoDeCompras> carrinhoOptional, PedidoDto pedidoDto,Pedido pedido){
-        System.out.println("criar pedido");
-        CarrinhoDeCompras carrinhoDeCompras = carrinhoOptional.get();
-        pedidoDto.setPrecoPedido(String.valueOf(carrinhoDeCompras.getTotal()));
-
-        System.out.println("salvar data");
-        pedidoDto.setDataDoPedido(LocalDate.now(ZoneId.of("UTC")));
-
-        System.out.println("adicionar carrinho");
-        pedido.setCarrinhoDeCompras(carrinhoOptional.get());
-
-        pedido.setNumeroPedido();
-    }
-
-    public Optional<List<Object>> findyByNome(String nome) {
+    public Optional<List<Pedido>> findyByNome(String nome) {
         return pedidoRepository.findByCarrinhoDeComprasUsuarioNome(nome);
     }
 
-    public Optional<List<Object>> findyByNumero(UUID numero) {
+    public Optional<List<Pedido>> findyByNumero(UUID numero) {
         return pedidoRepository.findByNumero(numero);
     }
 

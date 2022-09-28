@@ -1,5 +1,6 @@
 package br.com.apivendas.service;
 
+import br.com.apivendas.dto.CarrinhoDto;
 import br.com.apivendas.model.entity.CarrinhoDeCompras;
 import br.com.apivendas.model.entity.Item;
 import br.com.apivendas.repository.CarrinhoRepository;
@@ -21,7 +22,7 @@ public class CarrinhoService {
     public Optional<CarrinhoDeCompras> findById(Long idCarrinho) {
        return carrinhoRepository.findById(idCarrinho);
     }
-    @Transactional
+
     public CarrinhoDeCompras save(Item item, int quantidade) {
         var carrinho = new CarrinhoDeCompras();
         carrinho.setItens(item,quantidade);
@@ -32,7 +33,7 @@ public class CarrinhoService {
         return carrinhoRepository.findAll();
     }
 
-    public Optional<List<Object>> findyByNome(String nome) {
+    public Optional<List<CarrinhoDeCompras>> findyByNome(String nome) {
         return carrinhoRepository.findByUsuarioNome(nome);
     }
 
@@ -47,7 +48,7 @@ public class CarrinhoService {
 
     }
 
-    public Object atualizar(Long iditem, CarrinhoDeCompras carrinhoDeCompras, int quantidade) {
+    public CarrinhoDeCompras atualizar(Long iditem, CarrinhoDeCompras carrinhoDeCompras, int quantidade) {
             carrinhoDeCompras.getItens().stream()
                     .filter(item -> item.getId().equals(iditem))
                     .findAny().get().setQuantidade(quantidade);

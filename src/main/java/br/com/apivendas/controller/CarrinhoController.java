@@ -1,5 +1,6 @@
 package br.com.apivendas.controller;
 
+import br.com.apivendas.dto.CarrinhoDto;
 import br.com.apivendas.model.entity.CarrinhoDeCompras;
 import br.com.apivendas.model.entity.Item;
 import br.com.apivendas.service.CarrinhoService;
@@ -25,15 +26,15 @@ public class CarrinhoController {
         this.itensService = itensService;
     }
     @GetMapping("/buscarTodos")
-    public  ResponseEntity<List<CarrinhoDeCompras>> getCarrinho(){
-        return ResponseEntity.status(HttpStatus.OK).body(carrinhoService.buscarTodos());
+    public  ResponseEntity<List<CarrinhoDto>> getCarrinho(){
+        return ResponseEntity.status(HttpStatus.OK).body(CarrinhoDto.converterListParaDto(carrinhoService.buscarTodos()));
     }
 
     @GetMapping("/nomeUsuario/{nome}")
-    public ResponseEntity<List<Object>> getPedidosPorNome(@PathVariable String nome) {
-        Optional<List<Object>> optionalCarrinho = carrinhoService.findyByNome(nome);
+    public ResponseEntity<List<CarrinhoDto>> getPedidosPorNome(@PathVariable String nome) {
+        Optional<List<CarrinhoDeCompras>> optionalCarrinho = carrinhoService.findyByNome(nome);
         if (!optionalCarrinho.get().isEmpty()){
-            return ResponseEntity.status(HttpStatus.OK).body(optionalCarrinho.get());
+            return ResponseEntity.status(HttpStatus.OK).body(CarrinhoDto.converterListParaDto(optionalCarrinho.get()));
 
         }
         return new ResponseEntity<>(NOT_FOUND);
@@ -42,7 +43,7 @@ public class CarrinhoController {
     @PostMapping("/salvar")
     @Transactional
     // vai receber um item e adicionar na lista
-    public ResponseEntity<Object> salvarCarrinhoDeCompras(@RequestParam("idItem") Long idItem,
+    public ResponseEntity<CarrinhoDto> salvarCarrinhoDeCompras(@RequestParam("idItem") Long idItem,
                                                           @RequestParam("quantidade") int quantidade){
 
         Optional<Item> itemOptional = itensService.findById(idItem);
@@ -50,13 +51,13 @@ public class CarrinhoController {
         if (itemOptional.isPresent()){
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(carrinhoService.save(itemOptional.get(),quantidade));
+                    .body(CarrinhoDto.converterParaDto(carrinhoService.save(itemOptional.get(),quantidade)));
         }
-        return ResponseEntity.status(NOT_FOUND).body("erro");
+        return new  ResponseEntity<>(NOT_FOUND);
     }
     @PostMapping("/atualizar")
     @Transactional
-    public ResponseEntity<Object> atualizarCarrinho(
+    public ResponseEntity<CarrinhoDto> atualizarCarrinho(
             @RequestParam("idItem") Long idItem,
             @RequestParam("idcarrinho") Long idCarrinho,
             @RequestParam("quantidade") int quantidade){
@@ -65,8 +66,8 @@ public class CarrinhoController {
 
         return optionalCarrinhoDeCompras.map(carrinhoDeCompras -> ResponseEntity
                 .status(HttpStatus.OK)
-                .body(carrinhoService.atualizar(idItem, optionalCarrinhoDeCompras.get(), quantidade)))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.OK).body("erro"));
+                .body(CarrinhoDto.converterParaDto(carrinhoService.atualizar(idItem, optionalCarrinhoDeCompras.get(), quantidade))))
+                .orElseGet(() -> new ResponseEntity<>(NOT_FOUND));
 
     }
 

@@ -14,7 +14,6 @@ public class UsuarioDto {
     private Long id;
     private String nome;
     private String email;
-    private String senha;
     private CarrinhoDeCompras carrinhoDeCompras;
     private Pedido pedido;
 

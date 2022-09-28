@@ -44,11 +44,10 @@ public class UsuarioController {
 
     @PostMapping("/salvar")
     @Transactional
-    public ResponseEntity<Object> saveUsuario(@RequestBody @Valid UsuarioForm usuarioForm){
+    public ResponseEntity<UsuarioDto> saveUsuario(@RequestBody @Valid UsuarioForm usuarioForm){
         var usuario = new Usuario();
         BeanUtils.copyProperties(usuarioForm, usuario);
-        usuarioService.salvar(usuario);
-        return ResponseEntity.status(OK).body(UsuarioDto.converterParaDTO(usuario));
+        return ResponseEntity.status(OK).body(UsuarioDto.converterParaDTO(usuarioService.salvar(usuario)));
     }
 
     @PutMapping("/atualizar")

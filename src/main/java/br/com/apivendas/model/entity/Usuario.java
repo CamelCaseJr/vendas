@@ -5,6 +5,8 @@ import br.com.apivendas.model.entity.Pedido;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -20,6 +22,9 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "carrinho_de_compras_id")
     private CarrinhoDeCompras carrinhoDeCompras;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Endereco> enderecos = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "pedido_id")

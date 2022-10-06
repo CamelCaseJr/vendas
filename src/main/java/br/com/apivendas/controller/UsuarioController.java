@@ -5,6 +5,9 @@ import br.com.apivendas.form.UsuarioForm;
 import br.com.apivendas.model.entity.Usuario;
 import br.com.apivendas.service.UsuarioService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,9 +30,11 @@ public class UsuarioController {
     }
 
     @GetMapping("/buscarTodos")
-    public ResponseEntity<List<UsuarioDto>> getUsuario(){
-        List<Usuario> usuarios = usuarioService.buscarTodos();
-        return ResponseEntity.status(HttpStatus.OK).body(UsuarioDto.converterUsuario(usuarios));
+    public ResponseEntity<Page<UsuarioDto>> getUsuario(@RequestParam int page, int qtd){
+        Pageable pageable = PageRequest.of(page, qtd);
+
+        Page<Usuario> usuarios = usuarioService.buscarTodos(pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(UsuarioDto.pageConverterUsuario(usuarios));
     }
 
     @GetMapping("/nome/{nome}")

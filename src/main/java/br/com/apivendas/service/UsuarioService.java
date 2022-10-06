@@ -2,6 +2,8 @@ package br.com.apivendas.service;
 
 import br.com.apivendas.model.entity.Usuario;
 import br.com.apivendas.repository.UsuarioRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,8 +19,8 @@ public class UsuarioService {
     }
 
 
-    public List<Usuario> buscarTodos() {
-        return usuarioRepository.findAll();
+    public Page<Usuario> buscarTodos(Pageable pageable) {
+        return usuarioRepository.findAll(pageable);
     }
 
     public Optional<List<Usuario>> findyByNome(String nome) {

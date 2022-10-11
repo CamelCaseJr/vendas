@@ -10,6 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,6 +53,8 @@ public class UsuarioController {
     @Transactional
     public ResponseEntity<UsuarioDto> saveUsuario(@RequestBody @Valid UsuarioForm usuarioForm){
         var usuario = new Usuario();
+        String senhaCriptografada = new BCryptPasswordEncoder().encode(usuarioForm.getSenha());
+        usuarioForm.setSenha(senhaCriptografada);
         BeanUtils.copyProperties(usuarioForm, usuario);
         return ResponseEntity.status(OK).body(UsuarioDto.converterParaDTO(usuarioService.salvar(usuario)));
     }

@@ -36,12 +36,10 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/usuarios","/pedidos","/item","/endereco","/carrinho","/auth")
-                .permitAll()
-                .antMatchers(HttpMethod.GET, "/usuarios/*","/pedidos/*","/item/*","/endereco/*","/carrinho/*")
-                .permitAll()
-                .antMatchers(HttpMethod.POST,"/auth")
-                .permitAll()
+                .antMatchers(HttpMethod.GET, "/usuarios/*","/pedidos/*","/item/*","/endereco/*","/carrinho/*").permitAll()
+                .antMatchers(HttpMethod.POST,"/auth").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/usuarios","/pedidos","/item","/endereco","/carrinho","/auth").hasRole("MODERADOR")
+                .antMatchers(HttpMethod.POST,"/usuario/*").hasRole("MODERADOR")
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
